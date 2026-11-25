@@ -36,3 +36,19 @@ def test_predict_invalid_area() -> None:
     payload = {"city": "lahore", "area_sqft": -100, "bedrooms": 3, "age_years": "5"}
     response = client.post("/predict", json=payload)
     assert response.status_code == 422
+
+
+def test_stats_endpoint() -> None:
+    response = client.get("/stats")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["raw_rows"] == 1050
+    assert data["clean_rows"] > 0
+    assert data["dropped_rows"] == data["raw_rows"] - data["clean_rows"]
+    cities = [item["city"] for item in data["city_breakdown"]]
+    assert set(cities) == {"faisalabad", "lahore", "islamabad"}
+    for item in data["city_breakdown"]:
+        assert item["listing_count"] > 0
+        assert item["avg_price"] > 0
+        assert item["avg_area_sqft"] > 0
+        assert item["avg_price_per_sqft"] > 0

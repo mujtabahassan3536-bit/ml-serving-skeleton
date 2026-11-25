@@ -2,8 +2,13 @@ import logging
 
 from fastapi import FastAPI, HTTPException
 
-from app.predictor import load_and_clean_data, predict_price
-from app.schema import HealthResponse, PredictionRequest, PredictionResponse
+from app.predictor import get_dataset_stats, load_and_clean_data, predict_price
+from app.schema import (
+    HealthResponse,
+    PredictionRequest,
+    PredictionResponse,
+    StatsResponse,
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -20,6 +25,17 @@ def health_check() -> HealthResponse:
         raw_rows=raw_rows,
         clean_rows=clean_rows,
         dropped_rows=dropped_rows,
+    )
+
+
+@app.get("/stats", response_model=StatsResponse)
+def dataset_stats() -> StatsResponse:
+    raw_rows, clean_rows, breakdown = get_dataset_stats()
+    return StatsResponse(
+        raw_rows=raw_rows,
+        clean_rows=clean_rows,
+        dropped_rows=raw_rows - clean_rows,
+        city_breakdown=breakdown,
     )
 
 

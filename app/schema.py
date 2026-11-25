@@ -29,3 +29,18 @@ class HealthResponse(BaseModel):
     raw_rows: int
     clean_rows: int
     dropped_rows: int
+
+
+class CityStat(BaseModel):
+    city: str
+    listing_count: int
+    avg_price: float
+    avg_area_sqft: float
+    avg_price_per_sqft: float
+
+
+class StatsResponse(BaseModel):
+    raw_rows: int
+    clean_rows: int
+    dropped_rows: int
+    city_breakdown: list[CityStat]
