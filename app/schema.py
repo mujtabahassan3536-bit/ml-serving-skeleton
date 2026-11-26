@@ -44,3 +44,8 @@ class StatsResponse(BaseModel):
     clean_rows: int
     dropped_rows: int
     city_breakdown: list[CityStat]
+
+
+class CitiesResponse(BaseModel):
+    supported_cities: list[str]
+    total_cities: int

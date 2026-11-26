@@ -38,17 +38,9 @@ def test_predict_invalid_area() -> None:
     assert response.status_code == 422
 
 
-def test_stats_endpoint() -> None:
-    response = client.get("/stats")
+def test_cities_endpoint() -> None:
+    response = client.get("/cities")
     assert response.status_code == 200
     data = response.json()
-    assert data["raw_rows"] == 1050
-    assert data["clean_rows"] > 0
-    assert data["dropped_rows"] == data["raw_rows"] - data["clean_rows"]
-    cities = [item["city"] for item in data["city_breakdown"]]
-    assert set(cities) == {"faisalabad", "lahore", "islamabad"}
-    for item in data["city_breakdown"]:
-        assert item["listing_count"] > 0
-        assert item["avg_price"] > 0
-        assert item["avg_area_sqft"] > 0
-        assert item["avg_price_per_sqft"] > 0
+    assert data["supported_cities"] == ["faisalabad", "lahore", "islamabad"]
+    assert data["total_cities"] == 3

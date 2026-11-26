@@ -4,6 +4,7 @@ from fastapi import FastAPI, HTTPException
 
 from app.predictor import get_dataset_stats, load_and_clean_data, predict_price
 from app.schema import (
+    CitiesResponse,
     HealthResponse,
     PredictionRequest,
     PredictionResponse,
@@ -37,6 +38,12 @@ def dataset_stats() -> StatsResponse:
         dropped_rows=raw_rows - clean_rows,
         city_breakdown=breakdown,
     )
+
+
+@app.get("/cities", response_model=CitiesResponse)
+def list_cities() -> CitiesResponse:
+    cities = ["faisalabad", "lahore", "islamabad"]
+    return CitiesResponse(supported_cities=cities, total_cities=len(cities))
 
 
 @app.post("/predict", response_model=PredictionResponse)
