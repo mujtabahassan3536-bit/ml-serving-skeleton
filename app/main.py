@@ -2,7 +2,7 @@ import logging
 
 from fastapi import FastAPI, HTTPException
 
-from app.predictor import load_and_clean_data, predict_price
+from app.predictor import get_dataset_stats, load_and_clean_data, predict_price
 from app.schema import (
     CitiesResponse,
     HealthResponse,
@@ -29,6 +29,23 @@ def health_check() -> HealthResponse:
     )
 
 
+@app.get("/stats", response_model=StatsResponse)
+def dataset_stats() -> StatsResponse:
+    raw_rows, clean_rows, breakdown = get_dataset_stats()
+    return StatsResponse(
+        raw_rows=raw_rows,
+        clean_rows=clean_rows,
+        dropped_rows=raw_rows - clean_rows,
+        city_breakdown=breakdown,
+    )
+
+
+@app.get("/cities", response_model=CitiesResponse)
+def list_cities() -> CitiesResponse:
+    cities = ["faisalabad", "lahore", "islamabad"]
+    return CitiesResponse(supported_cities=cities, total_cities=len(cities))
+
+
 @app.post("/predict", response_model=PredictionResponse)
 def predict(request: PredictionRequest) -> PredictionResponse:
     logger.info("Prediction request received for city=%s", request.city)
@@ -49,9 +66,3 @@ def predict(request: PredictionRequest) -> PredictionResponse:
         city_avg_price_per_sqft=avg_ppsqft,
         model_version="v1.0-baseline",
     )
-
-
-@app.get("/cities", response_model=CitiesResponse)
-def list_cities() -> CitiesResponse:
-    cities = ["faisalabad", "lahore", "islamabad"]
-    return CitiesResponse(supported_cities=cities, total_cities=len(cities))

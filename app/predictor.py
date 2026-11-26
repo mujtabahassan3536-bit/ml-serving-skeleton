@@ -2,6 +2,8 @@ from pathlib import Path
 
 import pandas as pd
 
+from app.schema import CityStat
+
 DATA_PATH = Path(__file__).resolve().parent.parent / "data" / "dataset.csv"
 
 
@@ -74,3 +76,28 @@ def predict_price(
         area_sqft * avg_ppsqft + bedrooms * 300_000 - age_years * 40_000, 500_000.0
     )
     return round(estimated, 2), round(avg_ppsqft, 2)
+
+
+def get_dataset_stats() -> tuple[int, int, list[CityStat]]:
+    df, raw_rows, clean_rows = load_and_clean_data()
+    breakdown: list[CityStat] = []
+
+    for city in ["faisalabad", "lahore", "islamabad"]:
+        city_df = df[df["city"] == city]
+        count = len(city_df)
+        if count == 0:
+            continue
+        avg_price = round(float(city_df["price"].mean()), 2)
+        avg_area = round(float(city_df["area_sqft"].mean()), 2)
+        avg_ppsqft = round(float((city_df["price"] / city_df["area_sqft"]).mean()), 2)
+        breakdown.append(
+            CityStat(
+                city=city,
+                listing_count=count,
+                avg_price=avg_price,
+                avg_area_sqft=avg_area,
+                avg_price_per_sqft=avg_ppsqft,
+            )
+        )
+
+    return raw_rows, clean_rows, breakdown
