@@ -36,3 +36,11 @@ def test_predict_invalid_area() -> None:
     payload = {"city": "lahore", "area_sqft": -100, "bedrooms": 3, "age_years": "5"}
     response = client.post("/predict", json=payload)
     assert response.status_code == 422
+
+
+def test_cities_endpoint() -> None:
+    response = client.get("/cities")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["supported_cities"] == ["faisalabad", "lahore", "islamabad"]
+    assert data["total_cities"] == 3

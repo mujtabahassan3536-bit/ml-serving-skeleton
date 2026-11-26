@@ -3,7 +3,13 @@ import logging
 from fastapi import FastAPI, HTTPException
 
 from app.predictor import load_and_clean_data, predict_price
-from app.schema import HealthResponse, PredictionRequest, PredictionResponse
+from app.schema import (
+    CitiesResponse,
+    HealthResponse,
+    PredictionRequest,
+    PredictionResponse,
+    StatsResponse,
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -43,3 +49,9 @@ def predict(request: PredictionRequest) -> PredictionResponse:
         city_avg_price_per_sqft=avg_ppsqft,
         model_version="v1.0-baseline",
     )
+
+
+@app.get("/cities", response_model=CitiesResponse)
+def list_cities() -> CitiesResponse:
+    cities = ["faisalabad", "lahore", "islamabad"]
+    return CitiesResponse(supported_cities=cities, total_cities=len(cities))
