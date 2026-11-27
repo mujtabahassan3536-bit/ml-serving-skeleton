@@ -1,0 +1,47 @@
+{
+  "funnel": {
+    "raw_rows": 191393,
+    "houses_for_sale": 93809,
+    "valid_price_area": 93647,
+    "deduplicated": 51246
+  },
+  "retention_pct": 26.78,
+  "missing_counts": {
+    "city": 0,
+    "location": 0,
+    "area_sqft": 0,
+    "bedrooms": 6103,
+    "baths": 12426,
+    "price": 0
+  },
+  "price_skew_raw": 5.914,
+  "price_skew_log1p": 0.413,
+  "median_price_per_sqft_pkr": 9444.44,
+  "city_breakdown": {
+    "Lahore": {
+      "listings": 21432,
+      "median_price_pkr": 14500000.0,
+      "median_area_sqft": 1575.0
+    },
+    "Karachi": {
+      "listings": 11274,
+      "median_price_pkr": 22050000.0,
+      "median_area_sqft": 1800.0
+    },
+    "Islamabad": {
+      "listings": 8635,
+      "median_price_pkr": 22000000.0,
+      "median_area_sqft": 2092.5
+    },
+    "Rawalpindi": {
+      "listings": 6865,
+      "median_price_pkr": 11500000.0,
+      "median_area_sqft": 1575.0
+    },
+    "Faisalabad": {
+      "listings": 3040,
+      "median_price_pkr": 9000000.0,
+      "median_area_sqft": 1125.0
+    }
+  }
+}
